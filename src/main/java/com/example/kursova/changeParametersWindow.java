@@ -2,8 +2,11 @@ package com.example.kursova;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+
+import static com.example.kursova.Main.newStage;
 import static com.example.kursova.ObjectArray.electedObject;
 import static com.example.kursova.Main.primaryPane;
+import static com.example.kursova.ObjectArray.getObjectList;
 
 public class changeParametersWindow {
     @FXML
@@ -22,9 +25,8 @@ public class changeParametersWindow {
         int _x = Integer.parseInt(xInt.getText());
         int _y = Integer.parseInt(yInt.getText());
 
-        primaryPane.getChildren().remove(electedObject.getPane());
-        electedObject.changeParameters(_name,_money,_x,_y);
-        primaryPane.getChildren().add(electedObject.getPane());
+        electedObject.changeParameters(_name, _money, _x, _y);
+        newStage.close();
     }
 
 }

@@ -80,7 +80,7 @@ public class Main extends Application {
                 }
             }
         });
-        primaryStage.setTitle("Game");
+        primaryStage.setTitle("Casino");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

@@ -29,7 +29,7 @@ public class Poor {
         this.Y = Y;
         this.name = name;
         this.money = money;
-        createImaginePane();
+        createPane();
         System.out.println("the constructor with arguments was used\n" + this);
     }
 
@@ -57,7 +57,7 @@ public class Poor {
         return "Poor { name: " + name +
                 "; money: " + money +
                 "; Win rating: " + winRating +
-                "; lose rating: " + loseRating + "}\n";
+                "; lose rating: " + loseRating + " }\n";
     }
 
     private int X;
@@ -75,6 +75,8 @@ public class Poor {
     private final Image poorImage;
     private boolean elect = false;
     private Rectangle rectangle;
+    private Label nameLabel;
+    private Line line;
 
     {
         try {
@@ -85,27 +87,27 @@ public class Poor {
     }
 
     public void changeParameters(String name, double money, int X, int Y){
-        this.X = X;
-        this.Y = Y;
+        pane.setLayoutX(X-this.X);
+        pane.setLayoutY(Y-this.Y);
+        nameLabel.setText(name);
         this.name = name;
         this.money = money;
-        createImaginePane();
     }
-    private void createImaginePane() {
-        pane = new Pane();
 
+    private void createPane() {
+        pane = new Pane();
         ImageView poorView = new ImageView(poorImage);
         poorView.setLayoutX(X);
         poorView.setLayoutY(Y + 35);
 
-        Line line = new Line();
+        line = new Line();
         line.setLayoutX(X);
         line.setEndX(line.getEndX() + 50);
         line.setLayoutY(Y + 25);
         line.setStrokeWidth(5);
         line.setStroke(Color.GREEN);
 
-        Label nameLabel = new Label(name);
+        nameLabel = new Label(name);
         nameLabel.setLayoutX(X);
         nameLabel.setLayoutY(Y);
         nameLabel.setFont(Font.font("Impact", FontWeight.BOLD, 15));
