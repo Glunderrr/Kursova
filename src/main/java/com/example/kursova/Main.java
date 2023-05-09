@@ -36,9 +36,8 @@ public class Main extends Application {
                 if (event.getCode().equals(KeyCode.RIGHT)) player.moveX(5);
             }
             if (event.getCode().equals(KeyCode.ESCAPE) && !getActiveObjectList().isEmpty()) {
-                for (Poor player : getActiveObjectList()){
-                    player.setActive(false);
-                }
+                for (Poor player : getActiveObjectList()) player.setActive(false);
+                getActiveObjectList().clear();
             }
             if (event.getCode().equals(KeyCode.ENTER)) {
                 ObjectArray.showList("List of players in casino");
@@ -58,14 +57,14 @@ public class Main extends Application {
                 newStage.show();
             }
             if (event.getCode().equals(KeyCode.D) && electedObject != null) {
+                getActiveObjectList().remove(electedObject);
                 getObjectList().remove(electedObject);
                 primaryPane.getChildren().remove(electedObject.getGroup());
             }
             if (event.getCode().equals(KeyCode.DELETE) && !getObjectList().isEmpty()) {
-                for (Player player : getActiveObjectList()) {
-                    getObjectList().remove(player);
-                    primaryPane.getChildren().remove(player.getGroup());
-                }
+                for (Player player : getActiveObjectList()) primaryPane.getChildren().remove(player.getGroup());
+                getObjectList().clear();
+                getActiveObjectList().clear();
             }
             if (event.getCode().equals(KeyCode.U) && electedObject != null) {
                 Parent root;
