@@ -5,4 +5,8 @@ module com.example.kursova {
 
     opens com.example.kursova to javafx.fxml;
     exports com.example.kursova;
+    exports com.example.kursova.windows;
+    opens com.example.kursova.windows to javafx.fxml;
+    exports com.example.kursova.microobjects;
+    opens com.example.kursova.microobjects to javafx.fxml;
 }

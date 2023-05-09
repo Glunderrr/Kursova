@@ -1,4 +1,4 @@
-package com.example.kursova;
+package com.example.kursova.windows;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;

@@ -9,7 +9,7 @@
 
 
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-fx:controller="com.example.kursova.changeParametersWindow">
+fx:controller="com.example.kursova.windows.changeParametersWindow">
    <children>
       <Label text="Change Parameters">
          <padding>
@@ -71,7 +71,7 @@ fx:controller="com.example.kursova.changeParametersWindow">
             <Insets bottom="10.0" />
          </padding>
       </TextField>
-      <Button mnemonicParsing="false" onAction="#changeParameters" text="Close window">
+      <Button mnemonicParsing="false" onAction="#changeParameters" text="OK">
          <VBox.margin>
             <Insets top="10.0" />
          </VBox.margin>

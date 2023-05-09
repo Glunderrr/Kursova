@@ -3,13 +3,13 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.kursova.AddPoorWindow">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.kursova.windows.AddPoorWindow">
    <children>
       <Label text="Enter text">
          <padding>
@@ -71,9 +71,42 @@
             <Insets bottom="10.0" />
          </padding>
       </TextField>
-      <Button mnemonicParsing="false" onAction="#createPoor" text="Create">
+      <Label text="Select the object type:">
+         <padding>
+            <Insets bottom="5.0" top="10.0" />
+         </padding>
+         <font>
+            <Font size="20.0" />
+         </font>
          <VBox.margin>
-            <Insets top="10.0" />
+            <Insets bottom="5.0" top="10.0" />
+         </VBox.margin>
+      </Label>
+      <VBox prefHeight="58.0" prefWidth="300.0">
+         <children>
+            <RadioButton fx:id="rb_poor" mnemonicParsing="false"  text="Poor man">
+               <VBox.margin>
+                  <Insets left="30.0" />
+               </VBox.margin>
+               <toggleGroup>
+                  <ToggleGroup fx:id="object" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="rb_rich" mnemonicParsing="false" text="Rich man" toggleGroup="$object">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="30.0" top="5.0" />
+               </VBox.margin>
+            </RadioButton>
+            <RadioButton fx:id="rb_swindler" mnemonicParsing="false" text="Swindler" toggleGroup="$object">
+               <VBox.margin>
+                  <Insets left="30.0" />
+               </VBox.margin>
+            </RadioButton>
+         </children>
+      </VBox>
+      <Button mnemonicParsing="false" onAction="#createPoor" prefHeight="26.0" prefWidth="80.0" text="OK">
+         <VBox.margin>
+            <Insets top="18.0" />
          </VBox.margin>
       </Button>
    </children>

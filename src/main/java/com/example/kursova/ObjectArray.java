@@ -1,5 +1,7 @@
 package com.example.kursova;
 
+import com.example.kursova.microobjects.Player;
+import com.example.kursova.microobjects.Poor;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -14,14 +16,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectArray {
+    private static final List<Poor> objectList = new ArrayList<>();
+
+    private static final List<Poor> activeObjectList = new ArrayList<>();
+
+    public static Poor electedObject;
+
+
     public static List<Poor> getObjectList() {
         return objectList;
     }
 
-    private static final List<Poor> objectList = new ArrayList<>();
-    public static Poor electedObject;
 
-   static public void showList(String stageTitle) {
+    public static List<Poor> getActiveObjectList() {
+        return activeObjectList;
+    }
+    static public void showList(String stageTitle) {
         Label list = new Label();
         list.setText("*Press ENTER to close the window*\n");
         for (Object object : objectList)
@@ -30,7 +40,7 @@ public class ObjectArray {
         list.setFont(new Font(15));
         Pane pane = new Pane();
         pane.getChildren().add(list);
-        Scene scene = new Scene(pane, 550, 300);
+        Scene scene = new Scene(pane, 600, 300);
         Stage stage = new Stage();
         stage.setTitle(stageTitle);
         stage.setScene(scene);
