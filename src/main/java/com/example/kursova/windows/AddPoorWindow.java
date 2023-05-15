@@ -17,9 +17,9 @@ public class AddPoorWindow {
     @FXML
     void createPoor() {
         String _name = nameString.getText();
-        double _money = Double.parseDouble(moneyDouble.getText());
-        int _x = Integer.parseInt(xInt.getText());
-        int _y = Integer.parseInt(yInt.getText());
+        int _money = Integer.parseInt(moneyDouble.getText());
+        double _x = Double.parseDouble(xInt.getText());
+        double _y = Double.parseDouble(yInt.getText());
         Poor player;
         if (rb_poor.isSelected()) player = new Poor(_name, _money, _x, _y);
         else if(rb_rich.isSelected()) player = new Poor("12",12,21,21); // ДОПИШЕТЬСЯ В ПРОЦЕСІ

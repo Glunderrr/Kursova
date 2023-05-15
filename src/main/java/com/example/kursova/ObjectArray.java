@@ -1,6 +1,5 @@
 package com.example.kursova;
 
-import com.example.kursova.microobjects.Player;
 import com.example.kursova.microobjects.Poor;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -31,7 +30,8 @@ public class ObjectArray {
     public static List<Poor> getActiveObjectList() {
         return activeObjectList;
     }
-    static public void showList(String stageTitle) {
+
+    public static void showList(String stageTitle) {
         Label list = new Label();
         list.setText("*Press ENTER to close the window*\n");
         for (Object object : objectList)
@@ -45,13 +45,8 @@ public class ObjectArray {
         stage.setTitle(stageTitle);
         stage.setScene(scene);
         stage.show();
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ENTER) {
-                    stage.close();
-                }
-            }
+        scene.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER) stage.close();
         });
     }
 

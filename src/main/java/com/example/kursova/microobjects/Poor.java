@@ -12,20 +12,21 @@ import javafx.scene.text.FontWeight;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.text.NumberFormat;
 import java.util.Objects;
 
 public class Poor extends Player implements Cloneable {
-    public Poor(String name, double money, int X, int Y) {
+    public Poor(String name, int money, double X, double Y) {
         this.name = name;
         this.money = money;
         this.X = X;
         this.Y = Y;
-        createPane();
+        createGroup();
         System.out.println("the constructor with arguments was used\n" + this);
     }
 
     Poor() {
-        this("Poor man without name", 0.0, 100, 100);
+        this("Poor man without name", 0, 100.0, 100.0);
         System.out.println("the default constructor was used\n" + this);
     }
 
@@ -64,89 +65,107 @@ public class Poor extends Player implements Cloneable {
         System.out.println("Player " + name + " won at " + gameName);
     }
 
-
     @Override
     public Object clone() throws CloneNotSupportedException {
         Poor poor = (Poor) super.clone();
-        int _x = poor.getX() + 100;
-        int _y = poor.getY() + 100;
+        double _x = poor.getX() + 100;
+        double _y = poor.getY() + 100;
         poor.setGroup(new Group());
 
         poor.setX(_x);
         poor.setY(_y);
-        poor.setName(poor.name + ".cl");
+        poor.setName(poor.getName() + ".cl");
         poor.elect = false;
         poor.active = false;
 
         try {
-            poor.setPoorImage(new Image(new FileInputStream("src/images/poor.png"), 50, 80, false, false));
+            poor.setImage(new Image(new FileInputStream("src/images/poor.png"), 50, 80, false, false));
+            poor.setCoin(new Image(new FileInputStream("src/images/coin.png"), 15, 15, false, false));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
 
-        poor.setPoorView(new ImageView(poor.getPoorImage()));
-        poor.getPoorView().setLayoutX(_x);
-        poor.getPoorView().setLayoutY(_y + 35);
+        poor.setCoinView(new ImageView(coin));
+        poor.getCoinView().setY(20);
+        poor.getCoinView().setX(5);
 
-        poor.setLine(new Line());
-        poor.getLine().setLayoutX(_x);
-        poor.getLine().setEndX(poor.getLine().getEndX() + 50);
-        poor.getLine().setLayoutY(_y + 25);
-        poor.getLine().setStrokeWidth(5);
-        poor.getLine().setStroke(Color.DARKGREEN);
+        poor.setImageView(new ImageView(poor.getImage()));
+        poor.getImageView().setLayoutY(35);
+        poor.getImageView().setLayoutX(5);
+
+        poor.setMoneyLabel(new Label());
+        poor.getMoneyLabel().setText(String.valueOf(money));
+        poor.getMoneyLabel().setFont(new Font(12));
+        poor.getMoneyLabel().setLayoutX(20);
+        poor.getMoneyLabel().setLayoutY(18);
+        poor.getMoneyLabel().setTextFill(Color.FORESTGREEN);
 
         poor.setNameLabel(new Label(poor.getNameLabel().getText() + ".cl"));
-        poor.getNameLabel().setLayoutX(_x);
-        poor.getNameLabel().setLayoutY(_y);
         poor.getNameLabel().setFont(Font.font("Impact", FontWeight.BOLD, 15));
+        poor.getNameLabel().setLayoutX(5);
 
-        poor.setRectangle(new Rectangle(_x - 10, _y - 5, 70, 125));
-        poor.getRectangle().setFill(Color.TRANSPARENT);
+        poor.setRectangle(new Rectangle(0, 0, 70, 120));
+        poor.getRectangle().setFill(Color.WHITE);
         poor.getRectangle().setStrokeWidth(3);
         poor.getRectangle().setStroke(Color.TRANSPARENT);
 
-        poor.getGroup().getChildren().addAll(poor.getPoorView(), poor.getLine(), poor.getNameLabel(), poor.getRectangle());
+        poor.getGroup().getChildren().addAll(poor.getRectangle(), poor.getMoneyLabel(), poor.getCoinView(), poor.getImageView(), poor.getNameLabel() );
+        poor.getGroup().setLayoutX(_x);
+        poor.getGroup().setLayoutY(_y);
+
         return poor;
     }
 
-    private void createPane() {
+    private void createGroup() {
         group = new Group();
+        {
+            try {
+                image = new Image(new FileInputStream("src/images/poor.png"), 50, 80, false, false);
+                coin = new Image(new FileInputStream("src/images/coin.png"), 15, 15, false, false);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
-        poorView = new ImageView(poorImage);
-        poorView.setLayoutX(X);
-        poorView.setLayoutY(Y + 35);
+        coinView = new ImageView(coin);
+        coinView.setY(20);
+        coinView.setX(5);
 
-        line = new Line();
-        line.setLayoutX(X);
-        line.setEndX(line.getEndX() + 50);
-        line.setLayoutY(Y + 25);
-        line.setStrokeWidth(5);
-        line.setStroke(Color.DARKGREEN);
+        imageView = new ImageView(image);
+        imageView.setY(35);
+        imageView.setX(5);
+
+        moneyLabel = new Label();
+        moneyLabel.setText(String.valueOf(money));
+        moneyLabel.setFont(new Font(12));
+        moneyLabel.setLayoutX(20);
+        moneyLabel.setLayoutY(18);
+        moneyLabel.setTextFill(Color.FORESTGREEN);
 
         nameLabel = new Label(name);
-        nameLabel.setLayoutX(X);
-        nameLabel.setLayoutY(Y);
-        nameLabel.setFont(Font.font("Impact", FontWeight.BOLD, 15));
+        nameLabel.setFont(Font.font("Impact", 15));
+        nameLabel.setLayoutX(5);
 
-        rectangle = new Rectangle(X - 10, Y - 5, 70, 125);
-        rectangle.setFill(Color.TRANSPARENT);
+        rectangle = new Rectangle(0, 0, 70, 120);
+        rectangle.setFill(Color.WHITE);
         rectangle.setStrokeWidth(3);
         rectangle.setStroke(Color.TRANSPARENT);
 
-        group.getChildren().add(rectangle);
-        group.getChildren().add(nameLabel);
-        group.getChildren().add(poorView);
-        group.getChildren().add(line);
+        group.getChildren().addAll(rectangle, moneyLabel, coinView, nameLabel, imageView);
+
+        group.setLayoutX(X);
+        group.setLayoutY(Y);
     }
 
-    public void changeParameters(String name, double money, int X, int Y) {
-        group.setLayoutX(X - this.X);
-        this.X = X;
-        group.setLayoutY(Y - this.Y);
-        this.Y = Y;
+    public void changeParameters(String name, int money, double X, double Y) {
         nameLabel.setText(name);
         this.name = name;
         this.money = money;
+        moneyLabel.setText(String.valueOf(money));
+        group.setLayoutX(X);
+        this.X = X;
+        group.setLayoutY(Y);
+        this.Y = Y;
     }
 
     public void playBlackjack(int casinoRate /*значення від 16 до 21*/) {
@@ -168,19 +187,15 @@ public class Poor extends Player implements Cloneable {
 
     public void moveX(int stepX) {
         if (X + stepX > 0) {
-            group.setLayoutX(group.getLayoutX() + stepX);
-            X = X + stepX;
+            X += stepX;
+            group.setLayoutX(X);
         }
     }
 
     public void moveY(int stepY) {
         if (Y + stepY > 0) {
-            group.setLayoutY(group.getLayoutY() + stepY);
-            Y = Y + stepY;
+            Y += stepY;
+            group.setLayoutY(Y);
         }
     }
-
 }
-
-
-

@@ -5,7 +5,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
 import java.io.FileInputStream;
@@ -21,28 +20,23 @@ public abstract class Player {
         System.out.println("Start of dynamic block");
     }
 
-    int X, Y;
+    double X, Y;
     Group group;
     String name;
-    double money;
+    int money;
     int winRating = 0, loseRating = 0;
     final Random random = new Random();
 
-    {
-        try {
-            poorImage = new Image(new FileInputStream("src/images/poor.png"), 50, 80, false, false);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    Image coin;
+    ImageView coinView;
 
-    Image poorImage;
-    ImageView poorView;
+    Image image;
+    ImageView imageView;
     boolean elect = false;
     boolean active = false;
     Rectangle rectangle;
     Label nameLabel;
-    Line line;
+    Label moneyLabel;
 
     public boolean isActive() {
         return active;
@@ -50,18 +44,19 @@ public abstract class Player {
 
     public void flipActive() {
         this.active = !this.active;
-        if (active) line.setStroke(Color.LIGHTGREEN);
-        else line.setStroke(Color.DARKGREEN);
+        if (active) nameLabel.setTextFill(Color.ORANGE);
+        else nameLabel.setTextFill(Color.BLACK);
     }
 
     public void setActive(boolean active) {
         this.active = active;
-        if (active) line.setStroke(Color.LIGHTGREEN);
-        else line.setStroke(Color.DARKGREEN);
+        if (active) nameLabel.setTextFill(Color.ORANGE);
+        else nameLabel.setTextFill(Color.BLACK);
+
     }
 
-    public Image getPoorImage() {
-        return poorImage;
+    public Image getImage() {
+        return image;
     }
 
     public Rectangle getRectangle() {
@@ -80,13 +75,6 @@ public abstract class Player {
         this.nameLabel = nameLabel;
     }
 
-    public Line getLine() {
-        return line;
-    }
-
-    public void setLine(Line line) {
-        this.line = line;
-    }
 
     public int getLoseRating() {
         return loseRating;
@@ -116,23 +104,31 @@ public abstract class Player {
         return money;
     }
 
-    public void setMoney(double money) {
+    public Label getMoneyLabel() {
+        return moneyLabel;
+    }
+
+    public void setMoneyLabel(Label moneyLabel) {
+        this.moneyLabel = moneyLabel;
+    }
+
+    public void setMoney(int money) {
         this.money = money;
     }
 
-    public int getX() {
+    public double getX() {
         return X;
     }
 
-    public void setX(int x) {
+    public void setX(double x) {
         X = x;
     }
 
-    public int getY() {
+    public double getY() {
         return Y;
     }
 
-    public void setY(int y) {
+    public void setY(double y) {
         Y = y;
     }
 
@@ -158,16 +154,16 @@ public abstract class Player {
         this.group = group;
     }
 
-    public void setPoorImage(Image poorImage) {
-        this.poorImage = poorImage;
+    public void setImage(Image image) {
+        this.image = image;
     }
 
-    public ImageView getPoorView() {
-        return poorView;
+    public ImageView getImageView() {
+        return imageView;
     }
 
-    public void setPoorView(ImageView poorView) {
-        this.poorView = poorView;
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
     }
 
     public void setRectangleColor() {
@@ -179,4 +175,21 @@ public abstract class Player {
     public Rectangle getrectangle() {
         return rectangle;
     }
+
+    public Image getCoin() {
+        return coin;
+    }
+
+    public void setCoin(Image coin) {
+        this.coin = coin;
+    }
+
+    public ImageView getCoinView() {
+        return coinView;
+    }
+
+    public void setCoinView(ImageView coinView) {
+        this.coinView = coinView;
+    }
+
 }
