@@ -11,10 +11,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public abstract class CasinoGame {
+public class CasinoGame {
+    final Random random = new Random();
     String name;
     double X, Y;
     Group group;
@@ -25,7 +26,7 @@ public abstract class CasinoGame {
     int playerCounter;
 
     boolean elected;
-    List<Poor> playerList = new ArrayList<>();
+    List<Poor> playerList;
 
     public Group getGroup() {
         return group;
@@ -111,11 +112,19 @@ public abstract class CasinoGame {
         return Y;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setY(double y) {
         Y = y;
     }
 
-    public void defaultGroup(String name, Color color) {
+    protected void defaultGroup(String name, Color color) {
         group = new Group();
 
         this.name = name;
@@ -134,9 +143,9 @@ public abstract class CasinoGame {
         nameLabel.setLayoutX(12);
         nameLabel.setLayoutY(12);
 
-        playerCounterLabel = new Label("Players in game: " + playerCounter);
+        playerCounterLabel = new Label("Players at the table: " + playerCounter);
         playerCounterLabel.setFont(new Font(18));
-        playerCounterLabel.setLayoutX(165);
+        playerCounterLabel.setLayoutX(145);
         playerCounterLabel.setLayoutY(12);
 
         group.getChildren().addAll(rectangle, imageView, nameLabel, playerCounterLabel);
@@ -145,15 +154,16 @@ public abstract class CasinoGame {
 
         Main.primaryPane.getChildren().add(group);
     }
+
     public void increment(Poor poor) {
-            playerList.add(poor);
-            playerCounter = playerList.size();
-            playerCounterLabel.setText("Players in game: " + playerCounter); /*= new Label("Players in game: " + playerList.size())*/
+        playerList.add(poor);
+        playerCounter = playerList.size();
+        playerCounterLabel.setText("Players at the table: " + playerCounter); /*= new Label("Players in game: " + playerList.size())*/
     }
 
     public void decrement(Poor poor) {
         playerList.remove(poor);
         playerCounter = playerList.size();
-        playerCounterLabel.setText("Players in game: " + playerCounter); /*= new Label("Players in game: " + playerList.size())*/
+        playerCounterLabel.setText("Players at the table: " + playerCounter); /*= new Label("Players in game: " + playerList.size())*/
     }
 }

@@ -21,6 +21,7 @@ public class Poor extends Player implements Cloneable {
         this.money = money;
         this.X = X;
         this.Y = Y;
+        rate = money / 10;
         createGroup();
         System.out.println("the constructor with arguments was used\n" + this);
     }
@@ -35,12 +36,19 @@ public class Poor extends Player implements Cloneable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Poor poor = (Poor) o;
-        return Double.compare(poor.money, money) == 0 && winRating == poor.winRating && loseRating == poor.loseRating && Objects.equals(name, poor.name);
+        return Double.compare(poor.money, money) == 0 &&
+                winRating == poor.winRating &&
+                loseRating == poor.loseRating &&
+                Objects.equals(name, poor.name) &&
+                X == poor.X &&
+                Y == poor.Y &&
+                group == poor.group;
     }
+
 
     @Override
     public int hashCode() {
-        return Objects.hash(money, name, winRating, loseRating);
+        return Objects.hash(money, name, winRating, loseRating, X, Y, group);
     }
 
     @Override
@@ -53,24 +61,11 @@ public class Poor extends Player implements Cloneable {
                 "; Y: " + Y + " }\n";
     }
 
-    private void loosing(String gameName) {
-        loseRating++;
-        money -= money / 10;
-        System.out.println("Player " + name + " lost at " + gameName);
-    }
-
-    private void winning(double winCoefficient, String gameName) {
-        winRating++;
-        money += money / 10 * winCoefficient;
-        System.out.println("Player " + name + " won at " + gameName);
-    }
-
     @Override
-    public Object clone() throws CloneNotSupportedException {
+    public Poor clone() throws CloneNotSupportedException {
         Poor poor = (Poor) super.clone();
         double _x = poor.getX() + 100;
         double _y = poor.getY() + 100;
-        poor.setGroup(new Group());
 
         poor.setX(_x);
         poor.setY(_y);
@@ -79,39 +74,40 @@ public class Poor extends Player implements Cloneable {
         poor.active = false;
 
         try {
-            poor.setImage(new Image(new FileInputStream("src/images/poor.png"), 50, 80, false, false));
-            poor.setCoin(new Image(new FileInputStream("src/images/coin.png"), 15, 15, false, false));
+            poor.image = new Image(new FileInputStream("src/images/poor.png"), 50, 80, false, false);
+            poor.coin = new Image(new FileInputStream("src/images/coin.png"), 15, 15, false, false);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
 
-        poor.setCoinView(new ImageView(coin));
-        poor.getCoinView().setY(20);
-        poor.getCoinView().setX(5);
+        poor.coinView = new ImageView(coin);
+        poor.coinView.setY(20);
+        poor.coinView.setX(5);
 
-        poor.setImageView(new ImageView(poor.getImage()));
-        poor.getImageView().setLayoutY(35);
-        poor.getImageView().setLayoutX(5);
+        poor.imageView = new ImageView(poor.getImage());
+        poor.imageView.setLayoutY(35);
+        poor.imageView.setLayoutX(5);
 
-        poor.setMoneyLabel(new Label());
-        poor.getMoneyLabel().setText(String.valueOf(money));
-        poor.getMoneyLabel().setFont(new Font(12));
-        poor.getMoneyLabel().setLayoutX(20);
-        poor.getMoneyLabel().setLayoutY(18);
-        poor.getMoneyLabel().setTextFill(Color.FORESTGREEN);
+        poor.moneyLabel = new Label();
+        poor.moneyLabel.setText(String.valueOf(money));
+        poor.moneyLabel.setFont(new Font(12));
+        poor.moneyLabel.setLayoutX(20);
+        poor.moneyLabel.setLayoutY(18);
+        poor.moneyLabel.setTextFill(Color.FORESTGREEN);
 
-        poor.setNameLabel(new Label(poor.getNameLabel().getText() + ".cl"));
-        poor.getNameLabel().setFont(Font.font("Impact", FontWeight.BOLD, 15));
-        poor.getNameLabel().setLayoutX(5);
+        poor.nameLabel = new Label(poor.getNameLabel().getText() + ".cl");
+        poor.nameLabel.setFont(Font.font("Impact", FontWeight.BOLD, 15));
+        poor.nameLabel.setLayoutX(5);
 
-        poor.setRectangle(new Rectangle(0, 0, 70, 120));
-        poor.getRectangle().setFill(Color.WHITE);
-        poor.getRectangle().setStrokeWidth(3);
-        poor.getRectangle().setStroke(Color.TRANSPARENT);
+        poor.rectangle = new Rectangle(0, 0, 70, 120);
+        poor.rectangle.setFill(Color.WHITE);
+        poor.rectangle.setStrokeWidth(3);
+        poor.rectangle.setStroke(Color.TRANSPARENT);
 
-        poor.getGroup().getChildren().addAll(poor.getRectangle(), poor.getMoneyLabel(), poor.getCoinView(), poor.getImageView(), poor.getNameLabel() );
-        poor.getGroup().setLayoutX(_x);
-        poor.getGroup().setLayoutY(_y);
+        poor.group = new Group();
+        poor.group.getChildren().addAll(poor.getRectangle(), poor.getMoneyLabel(), poor.getCoinView(), poor.getImageView(), poor.getNameLabel());
+        poor.group.setLayoutX(_x);
+        poor.group.setLayoutY(_y);
 
         return poor;
     }
@@ -166,23 +162,39 @@ public class Poor extends Player implements Cloneable {
         this.X = X;
         group.setLayoutY(Y);
         this.Y = Y;
+        rate = money / 10;
     }
 
     public void playBlackjack(int casinoRate /*значення від 16 до 21*/) {
-        String gameName = "Blackjack";
-        int playerRate = random.nextInt(10) + 12;
-        if (playerRate < casinoRate || loseRating < winRating) loosing(gameName);
-        else if (playerRate == 21) winning(1.5, gameName);
-        else winning(1.0, gameName);
+        analysis();
+        int playerRate = random.nextInt(6) + 16;
+        if (loseRating <= winRating) {
+            money -= rate;
+            loseRating++;
+        }
+        else if (playerRate == casinoRate) return;
+        else if (playerRate < casinoRate) {
+            money -= rate;
+            loseRating++;
+        } else {
+            winRating++;
+            if (playerRate == 21) money += rate * 1.5;
+            else money += rate * (random.nextInt(3) + 1);
+        }
+        moneyLabel.setText(String.valueOf(money));
     }
 
     public void playRoulette(int casinoRate) {
-        String gameName = "roulette";
+        analysis();
         int playerRate = random.nextInt(37);
-        if (loseRating < winRating) loosing(gameName);
-        else if (casinoRate == playerRate) winning(35.0, gameName);
-        else if (casinoRate % 2 == playerRate % 2 && casinoRate != 0) winning(1.0, gameName);
-        else loosing("roulette");
+        if (casinoRate % 2 == playerRate % 2 && casinoRate != 0 && loseRating > winRating) {
+            money += rate;
+            winRating++;
+        } else {
+            money -= rate;
+            loseRating++;
+        }
+        moneyLabel.setText(String.valueOf(money));
     }
 
     public void moveX(int stepX) {
@@ -197,5 +209,12 @@ public class Poor extends Player implements Cloneable {
             Y += stepY;
             group.setLayoutY(Y);
         }
+    }
+
+    private void analysis() {
+        if (money <= 200) rate = 40;
+        else if (money <= 10000) rate = money / 10;
+        else if (money <= 50000) rate = money / 5;
+        else rate = money / 2;
     }
 }

@@ -20,6 +20,7 @@ public abstract class Player {
         System.out.println("Start of dynamic block");
     }
 
+    int rate;
     double X, Y;
     Group group;
     String name;
@@ -100,7 +101,7 @@ public abstract class Player {
         this.name = name;
     }
 
-    public double getMoney() {
+    public int getMoney() {
         return money;
     }
 

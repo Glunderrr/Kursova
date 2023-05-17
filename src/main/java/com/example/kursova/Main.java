@@ -4,7 +4,6 @@ import com.example.kursova.macroobjects.Blackjack;
 import com.example.kursova.macroobjects.CasinoGame;
 import com.example.kursova.macroobjects.Poker;
 import com.example.kursova.macroobjects.Roulette;
-import com.example.kursova.microobjects.Player;
 import com.example.kursova.microobjects.Poor;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -20,8 +19,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static com.example.kursova.ObjectArray.electedObject;
 import static com.example.kursova.ObjectArray.getObjectList;
@@ -31,6 +28,7 @@ public class Main extends Application {
     public static Stage primaryStage;
     public static Pane primaryPane;
     public static Stage newStage;
+    public static CasinoGame[] casinoGames;
 
     @Override
     public void start(Stage primaryStage) {
@@ -50,7 +48,7 @@ public class Main extends Application {
         Poker poker = new Poker(500.0, 220.0);
         Roulette roulette = new Roulette(900.0, 220.0);
 
-        CasinoGame[] casinoGames = new CasinoGame[]{blackjack, poker, roulette};
+        casinoGames = new CasinoGame[]{blackjack, poker, roulette};
         Scene scene = new Scene(primaryPane, 1280, 720);
 
         scene.setOnKeyPressed(event -> {
@@ -61,6 +59,21 @@ public class Main extends Application {
                 if (event.getCode().equals(KeyCode.RIGHT)) player.moveX(5);
             }
 
+            if(event.getCode().equals(KeyCode.S)){
+                Parent root;
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("searchWindow.fxml"));
+                try {
+                    root = loader.load();
+                } catch (IOException e) {
+                    System.out.println("НЕ ПРАЦЮЄ");
+                    throw new RuntimeException(e);
+                }
+                Scene secondScene = new Scene(root);
+                newStage = new Stage();
+                newStage.setTitle("Search player");
+                newStage.setScene(secondScene);
+                newStage.show();
+            }
             if (event.getCode().equals(KeyCode.ENTER)) ObjectArray.showList("List of players in casino");
             if (event.getCode().equals(KeyCode.C)) {
                 Parent root;
@@ -82,9 +95,9 @@ public class Main extends Application {
                 getActiveObjectList().clear();
             }
             if (event.getCode().equals(KeyCode.DELETE) && !getActiveObjectList().isEmpty()) {
-                for (Player player : getActiveObjectList()) {
+                for (Poor player : getActiveObjectList()) {
                     for (CasinoGame game : casinoGames) {
-                        game.getPlayerList().remove(player);
+                        game.decrement(player);
                     }
                     primaryPane.getChildren().remove(player.getGroup());
                     getObjectList().remove(player);
@@ -93,6 +106,7 @@ public class Main extends Application {
             }
 
             if (event.getCode().equals(KeyCode.D) && electedObject != null) {
+                for (CasinoGame game : casinoGames) game.decrement(electedObject);
                 getActiveObjectList().remove(electedObject);
                 getObjectList().remove(electedObject);
                 primaryPane.getChildren().remove(electedObject.getGroup());
@@ -113,7 +127,7 @@ public class Main extends Application {
             }
             if (event.getCode().equals(KeyCode.V) && electedObject != null) {
                 try {
-                    Poor clonedElectObject = (Poor)electedObject.clone();
+                    Poor clonedElectObject = electedObject.clone();
                     getObjectList().add(clonedElectObject);
                     primaryPane.getChildren().add(clonedElectObject.getGroup());
                 } catch (CloneNotSupportedException e) {
@@ -144,23 +158,33 @@ public class Main extends Application {
                         if (!poor.isActive()) getActiveObjectList().add(poor);
                         else getActiveObjectList().remove(poor);
                         poor.flipActive();
+                        break;
                     }
                 }
             }
         });
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(500), actionEvent -> {
-            for (Poor poor : getObjectList()) {
-                for (CasinoGame game : casinoGames) {
-                    if (!game.getGroup().getBoundsInParent().intersects(poor.getGroup().getBoundsInParent()) && game.getPlayerList().contains(poor)) {
-                        game.decrement(poor);
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.millis(500), actionEvent -> {
+                    for (Poor poor : getObjectList()) {
+                        for (CasinoGame game : casinoGames) {
+                            if (!game.getGroup().getBoundsInParent().intersects(poor.getGroup().getBoundsInParent()) && game.getPlayerList().contains(poor)) {
+                                game.decrement(poor);
+                            }
+                            if (game.getGroup().getBoundsInParent().intersects(poor.getGroup().getBoundsInParent()) && !game.getPlayerList().contains(poor)) {
+                                game.increment(poor);
+                            }
+                        }
                     }
-                    if (game.getGroup().getBoundsInParent().intersects(poor.getGroup().getBoundsInParent()) && !game.getPlayerList().contains(poor)) {
-                        game.increment(poor);
+                }),
+                new KeyFrame(Duration.millis(1000), actionEvent -> {
+                    for (Poor player : blackjack.getPlayerList()) {
+                        if (player.getMoney() > 0) player.playBlackjack(blackjack.createRate());
                     }
-                }
-            }
-        }));
+                    for (Poor player : roulette.getPlayerList()) {
+                        if (player.getMoney() > 0) player.playRoulette(roulette.createRate());
+                    }
+                }));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
         primaryStage.setTitle("Casino");

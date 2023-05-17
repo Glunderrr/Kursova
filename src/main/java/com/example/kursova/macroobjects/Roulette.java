@@ -1,6 +1,5 @@
 package com.example.kursova.macroobjects;
 
-import com.example.kursova.microobjects.Poor;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
@@ -8,7 +7,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-public class Roulette extends CasinoGame{
+public class Roulette extends CasinoGame {
+
     public Roulette(double X, double Y) {
         this.X = X;
         this.Y = Y;
@@ -19,7 +19,8 @@ public class Roulette extends CasinoGame{
                 throw new RuntimeException(e);
             }
         }
-      //  playerList = new ArrayList<>();
+        playerList = new ArrayList<>();
         defaultGroup("Roulette",Color.LIMEGREEN);
     }
+    public int createRate(){return random.nextInt(36) ;}
 }

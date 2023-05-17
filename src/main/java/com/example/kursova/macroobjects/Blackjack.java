@@ -1,17 +1,7 @@
 package com.example.kursova.macroobjects;
 
-import com.example.kursova.Main;
-import com.example.kursova.microobjects.Poor;
-import javafx.scene.Group;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-
-import static com.example.kursova.ObjectArray.getObjectList;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -28,7 +18,8 @@ public class Blackjack extends CasinoGame {
                 throw new RuntimeException(e);
             }
         }
-       // playerList = new ArrayList<>();
+        playerList = new ArrayList<>();
         defaultGroup("Blackjack", Color.PURPLE);
     }
+    public int createRate(){return random.nextInt(8) + 16;}
 }

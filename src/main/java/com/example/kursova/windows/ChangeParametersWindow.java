@@ -6,7 +6,7 @@ import javafx.scene.control.TextField;
 import static com.example.kursova.Main.newStage;
 import static com.example.kursova.ObjectArray.electedObject;
 
-public class changeParametersWindow {
+public class ChangeParametersWindow {
     @FXML
     private TextField nameString;
     @FXML
@@ -26,5 +26,4 @@ public class changeParametersWindow {
         electedObject.changeParameters(_name, _money, _x, _y);
         newStage.close();
     }
-
 }
