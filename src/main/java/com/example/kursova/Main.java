@@ -18,7 +18,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -36,12 +35,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        try {
-            FileWriter writer = new FileWriter("history.txt", true);
-            BufferedWriter bufferedWriter = new BufferedWriter(writer);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         Main.primaryStage = primaryStage;
         primaryPane = new Pane();
         Blackjack blackjack = new Blackjack(100.0, 220.0);
@@ -51,7 +44,7 @@ public class Main extends Application {
         casinoGames = new CasinoGame[]{blackjack, poker, roulette};
         Scene scene = new Scene(primaryPane, 1280, 720);
 
-        for(CasinoGame game: casinoGames){
+        for (CasinoGame game : casinoGames) {
             write(game.toString());
         }
         scene.setOnKeyPressed(event -> {
@@ -197,20 +190,10 @@ public class Main extends Application {
     public static void write(String text) {
         try {
             FileWriter writer = new FileWriter("history.txt", true);
-            writer.write(text+"\n");
+            writer.write(text + "\n");
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
-        }/*
-        try {
-            FileWriter writer = new FileWriter("history.txt", true);
-            BufferedWriter bufferedWriter = new BufferedWriter(writer);
-            bufferedWriter.close();
-*//*            bufferedWriter.newLine();*//*
-            bufferedWriter.write(text);
-            System.out.println("ПРАЦЮЄ");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }*/
+        }
     }
 }
