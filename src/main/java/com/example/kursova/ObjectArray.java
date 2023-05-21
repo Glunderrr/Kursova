@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -20,6 +21,11 @@ public class ObjectArray {
     private static final List<Poor> objectList = new ArrayList<>();
 
     private static final List<Poor> activeObjectList = new ArrayList<>();
+    private static final List<Poor> playersInGames = new ArrayList<>();
+
+    public static List<Poor> getPlayersInGames() {
+        return playersInGames;
+    }
 
     public static Poor electedObject;
 
@@ -34,9 +40,6 @@ public class ObjectArray {
     }
 
     public static void showList(String stageTitle) {
-/*        ObservableList<Poor> items = FXCollections.observableArrayList();
-        items.addAll(objectList);
-        ListView<Poor> listView = new ListView<>(items);*/
         Label list = new Label();
         for (Object object : objectList) list.setText(list.getText() + object.toString());
         list.setPadding(new Insets(5, 0, 0, 20));
@@ -48,8 +51,13 @@ public class ObjectArray {
         stage.setTitle(stageTitle);
         stage.setScene(scene);
         stage.show();
-        scene.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER) stage.close();
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() { //ВИКОРИСТАННЯ АНОНІМНОГО КЛАСУ
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ENTER) {
+                    stage.close();
+                }
+            }
         });
     }
 

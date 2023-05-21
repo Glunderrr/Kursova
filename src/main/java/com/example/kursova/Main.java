@@ -18,6 +18,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import static com.example.kursova.ObjectArray.electedObject;
@@ -29,21 +31,19 @@ public class Main extends Application {
     public static Pane primaryPane;
     public static Stage newStage;
     public static CasinoGame[] casinoGames;
+    /*FileWriter writer;
+    BufferedWriter bufferedWriter;*/
 
     @Override
     public void start(Stage primaryStage) {
+        try {
+            FileWriter writer = new FileWriter("history.txt", true);
+            BufferedWriter bufferedWriter = new BufferedWriter(writer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Main.primaryStage = primaryStage;
         primaryPane = new Pane();
-/*        Image image;
-        {
-            try {
-                image = new Image(new FileInputStream("src/images/title.jpg"), 1280, 720, false, false);
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        ImageView title = new ImageView(image);
-        primaryPane.getChildren().add(title);*/
         Blackjack blackjack = new Blackjack(100.0, 220.0);
         Poker poker = new Poker(500.0, 220.0);
         Roulette roulette = new Roulette(900.0, 220.0);
@@ -51,57 +51,49 @@ public class Main extends Application {
         casinoGames = new CasinoGame[]{blackjack, poker, roulette};
         Scene scene = new Scene(primaryPane, 1280, 720);
 
+        for(CasinoGame game: casinoGames){
+            write(game.toString());
+        }
         scene.setOnKeyPressed(event -> {
             for (Poor player : getActiveObjectList()) {
-                if (event.getCode().equals(KeyCode.UP)) player.moveY(-5);
-                if (event.getCode().equals(KeyCode.DOWN)) player.moveY(5);
-                if (event.getCode().equals(KeyCode.LEFT)) player.moveX(-5);
-                if (event.getCode().equals(KeyCode.RIGHT)) player.moveX(5);
+                if (event.getCode().equals(KeyCode.UP)) {
+                    player.moveUP();
+                    write(player.toString());
+                }
+                if (event.getCode().equals(KeyCode.DOWN)) {
+                    player.moveDOWN();
+                    write(player.toString());
+                }
+                if (event.getCode().equals(KeyCode.LEFT)) {
+                    player.moveLEFT();
+                    write(player.toString());
+                }
+                if (event.getCode().equals(KeyCode.RIGHT)) {
+                    player.moveRIGHT();
+                    write(player.toString());
+                }
             }
 
-            if(event.getCode().equals(KeyCode.S)){
-                Parent root;
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("searchWindow.fxml"));
-                try {
-                    root = loader.load();
-                } catch (IOException e) {
-                    System.out.println("НЕ ПРАЦЮЄ");
-                    throw new RuntimeException(e);
-                }
-                Scene secondScene = new Scene(root);
-                newStage = new Stage();
-                newStage.setTitle("Search player");
-                newStage.setScene(secondScene);
-                newStage.show();
+            if (event.getCode().equals(KeyCode.S)) {
+                createWindow("searchWindow.fxml", "Search player");
             }
             if (event.getCode().equals(KeyCode.ENTER)) ObjectArray.showList("List of players in casino");
             if (event.getCode().equals(KeyCode.C)) {
-                Parent root;
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("addWindow.fxml"));
-                try {
-                    root = loader.load();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                Scene secondScene = new Scene(root);
-                newStage = new Stage();
-                newStage.setTitle("Add player");
-                newStage.setScene(secondScene);
-                newStage.show();
+                createWindow("addWindow.fxml", "Add player");
             }
 
             if (event.getCode().equals(KeyCode.ESCAPE) && !getActiveObjectList().isEmpty()) {
                 for (Poor player : getActiveObjectList()) player.setActive(false);
                 getActiveObjectList().clear();
+                write("Turn off all elements in activeObjectList");
             }
             if (event.getCode().equals(KeyCode.DELETE) && !getActiveObjectList().isEmpty()) {
                 for (Poor player : getActiveObjectList()) {
-                    for (CasinoGame game : casinoGames) {
-                        game.decrement(player);
-                    }
+                    for (CasinoGame game : casinoGames) game.decrement(player);
                     primaryPane.getChildren().remove(player.getGroup());
-                    getObjectList().remove(player);
                 }
+                write("Delete all elements from activeObjectList");
+                getActiveObjectList().forEach(getObjectList()::remove); //METHOD REFERENCE
                 getActiveObjectList().clear();
             }
 
@@ -110,24 +102,15 @@ public class Main extends Application {
                 getActiveObjectList().remove(electedObject);
                 getObjectList().remove(electedObject);
                 primaryPane.getChildren().remove(electedObject.getGroup());
+                write("Delete elected object");
             }
             if (event.getCode().equals(KeyCode.U) && electedObject != null) {
-                Parent root;
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("changeParametersWindow.fxml"));
-                try {
-                    root = loader.load();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                Scene secondScene = new Scene(root);
-                newStage = new Stage();
-                newStage.setTitle("Change parameters");
-                newStage.setScene(secondScene);
-                newStage.show();
+                createWindow("changeParametersWindow.fxml", "Change parameters");
             }
             if (event.getCode().equals(KeyCode.V) && electedObject != null) {
                 try {
                     Poor clonedElectObject = electedObject.clone();
+                    write(clonedElectObject.toString());
                     getObjectList().add(clonedElectObject);
                     primaryPane.getChildren().add(clonedElectObject.getGroup());
                 } catch (CloneNotSupportedException e) {
@@ -192,7 +175,42 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         launch(args);
+    }
+
+    public void createWindow(String fileName, String title) {
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fileName));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Scene secondScene = new Scene(root);
+        newStage = new Stage();
+        newStage.setTitle(title);
+        newStage.setScene(secondScene);
+        newStage.show();
+    }
+
+    public static void write(String text) {
+        try {
+            FileWriter writer = new FileWriter("history.txt", true);
+            writer.write(text+"\n");
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }/*
+        try {
+            FileWriter writer = new FileWriter("history.txt", true);
+            BufferedWriter bufferedWriter = new BufferedWriter(writer);
+            bufferedWriter.close();
+*//*            bufferedWriter.newLine();*//*
+            bufferedWriter.write(text);
+            System.out.println("ПРАЦЮЄ");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }*/
     }
 }

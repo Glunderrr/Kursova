@@ -1,43 +1,106 @@
 package com.example.kursova.windows;
 
+import com.example.kursova.macroobjects.CasinoGame;
+import com.example.kursova.microobjects.Poor;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
-import java.net.URL;
+import java.util.stream.Collectors;
 
-import java.util.ResourceBundle;
+import static com.example.kursova.Main.casinoGames;
+import static com.example.kursova.ObjectArray.*;
+import static com.example.kursova.ObjectArray.getActiveObjectList;
 
-public class SearchWindow implements Initializable {
+public class SearchWindow {
     @FXML
-    ChoiceBox<String> game, activity;
-    @FXML
-    Button activityButton, nameButton, gameButton;
-    @FXML
-    TextField enterNameField;
-    @FXML
-    ListView<String> listView;
+    private TextField enterNameField;
 
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        game.getItems().addAll("Blackjack", "Roulette", "Poker", "No game");
-        activity.getItems().addAll("Activity", "No activity");
-    }
+    @FXML
+    private ListView<Poor> listView;
+    @FXML
+    MenuButton activityMenuButton, gameMenuButton;
+    ObservableList<Poor> items = FXCollections.observableArrayList();
+    boolean activity;
 
     @FXML
     void searchByName() {
-        System.out.println("searchByName");
+        activityMenuButton.setText("Activity");
+        gameMenuButton.setText("Games");
+        items.clear();
+        listView.getItems().clear();
+        for (Poor player : getObjectList())
+            if (player.getName().equals(enterNameField.getText()))
+                items.add(player);
+        listView.setItems(items);
     }
 
     @FXML
     void searchByActivity() {
-        System.out.println("searchByActivity");
+        enterNameField.setText("");
+        gameMenuButton.setText("Games");
+        items.clear();
+        listView.getItems().clear();
+        if (activity) items.setAll(getActiveObjectList().stream().toList());//STREAM API
+        else{
+            for (Poor player : getObjectList()) {
+                if (!player.isActive()) items.add(player);
+            }
+        }
+        listView.setItems(items);
     }
 
     @FXML
     void searchByGame() {
-        System.out.println("searchByGame");
+        enterNameField.setText("");
+        activityMenuButton.setText("Activity");
+        items.clear();
+        listView.getItems().clear();
+        if (gameMenuButton.getText().equals("No game")) {
+            for (Poor player : getObjectList()) {
+                if (!getPlayersInGames().contains(player)) items.add(player);
+            }
+        } else {
+            for (CasinoGame game : casinoGames) {
+                if (gameMenuButton.getText().equals(game.getName())) {
+                    items.addAll(game.getPlayerList());
+                    break;
+                }
+            }
+        }
+        listView.setItems(items);
+    }
+
+    @FXML
+    void blackjack() {
+        gameMenuButton.setText("Blackjack");
+    }
+
+    @FXML
+    void roulette() {
+        gameMenuButton.setText("Roulette");
+    }
+
+    @FXML
+    void poker() {
+        gameMenuButton.setText("Poker");
+    }
+
+    @FXML
+    void noGame() {
+        gameMenuButton.setText("No game");
+    }
+
+    @FXML
+    void activity() {
+        activityMenuButton.setText("True");
+        activity = true;
+    }
+
+    @FXML
+    void noActivity() {
+        activityMenuButton.setText("False");
+        activity = false;
     }
 }

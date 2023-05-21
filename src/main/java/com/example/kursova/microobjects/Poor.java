@@ -15,7 +15,7 @@ import java.io.FileNotFoundException;
 import java.text.NumberFormat;
 import java.util.Objects;
 
-public class Poor extends Player implements Cloneable {
+public class Poor extends Player implements Cloneable, Comparable<Poor> {
     public Poor(String name, int money, double X, double Y) {
         this.name = name;
         this.money = money;
@@ -29,6 +29,16 @@ public class Poor extends Player implements Cloneable {
     Poor() {
         this("Poor man without name", 0, 100.0, 100.0);
         System.out.println("the default constructor was used\n" + this);
+    }
+
+
+    @Override
+    public int compareTo(Poor o) {
+        int result = 0;
+        result += Integer.compare(this.getMoney(), o.getMoney());
+        result += Integer.compare(this.getWinRating() + this.getLoseRating(), o.getWinRating() + o.getLoseRating());
+        result += this.getName().compareTo(o.getName());
+        return result;
     }
 
     @Override
@@ -58,7 +68,7 @@ public class Poor extends Player implements Cloneable {
                 "; Win rating: " + winRating +
                 "; lose rating: " + loseRating +
                 "; X: " + X +
-                "; Y: " + Y + " }\n";
+                "; Y: " + Y + " }";
     }
 
     @Override
@@ -72,7 +82,7 @@ public class Poor extends Player implements Cloneable {
         poor.setName(poor.getName() + ".cl");
         poor.elect = false;
         poor.active = false;
-
+        poor.mooving = new Moving(poor);
         try {
             poor.image = new Image(new FileInputStream("src/images/poor.png"), 50, 80, false, false);
             poor.coin = new Image(new FileInputStream("src/images/coin.png"), 15, 15, false, false);
@@ -171,8 +181,7 @@ public class Poor extends Player implements Cloneable {
         if (loseRating <= winRating) {
             money -= rate;
             loseRating++;
-        }
-        else if (playerRate == casinoRate) return;
+        } else if (playerRate == casinoRate) return;
         else if (playerRate < casinoRate) {
             money -= rate;
             loseRating++;
@@ -197,17 +206,43 @@ public class Poor extends Player implements Cloneable {
         moneyLabel.setText(String.valueOf(money));
     }
 
-    public void moveX(int stepX) {
-        if (X + stepX > 0) {
-            X += stepX;
-            group.setLayoutX(X);
-        }
+    Moving mooving = new Moving(this);
+
+    public void moveUP() {
+        mooving.moveY(-5);
     }
 
-    public void moveY(int stepY) {
-        if (Y + stepY > 0) {
-            Y += stepY;
-            group.setLayoutY(Y);
+    public void moveDOWN() {
+        mooving.moveY(5);
+    }
+
+    public void moveLEFT() {
+        mooving.moveX(-5);
+    }
+
+    public void moveRIGHT() {
+        mooving.moveX(5);
+    }
+
+    private class Moving {
+        private Poor player;
+
+        Moving(Poor player) {
+            this.player = player;
+        }
+
+        public void moveX(int stepX) {
+            if (player.getX() + stepX > 0) {
+                player.setX(player.getX() + stepX);
+                player.getGroup().setLayoutX(player.getX());
+            }
+        }
+
+        public void moveY(int stepY) {
+            if (player.getY() + stepY > 0) {
+                player.setY(player.getY() + stepY);
+                player.getGroup().setLayoutY(player.getY());
+            }
         }
     }
 

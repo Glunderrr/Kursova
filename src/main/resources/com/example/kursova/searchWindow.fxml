@@ -2,9 +2,10 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -12,7 +13,7 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0"
       prefWidth="720.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.kursova.windows.SearchWindow">>
+      fx:controller="com.example.kursova.windows.SearchWindow">
     <children>
         <HBox prefHeight="100.0" prefWidth="200.0">
             <children>
@@ -33,7 +34,7 @@
                                 <Insets top="10.0"/>
                             </VBox.margin>
                         </TextField>
-                        <Button fx:id="nameButton" mnemonicParsing="false" onAction="#searchByName" text="Search">
+                        <Button mnemonicParsing="false" onAction="#searchByName" text="Search">
                             <font>
                                 <Font size="14.0"/>
                             </font>
@@ -46,17 +47,24 @@
                 <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="240.0"
                       style="-fx-background-color: #A4AA89;">
                     <children>
-                        <Label text="choose a game">
+                        <Label text="Choose a game">
                             <font>
                                 <Font name="System Bold Italic" size="14.0"/>
                             </font>
                         </Label>
-                        <ChoiceBox fx:id="game" prefWidth="150.0">
+                        <MenuButton fx:id="gameMenuButton" mnemonicParsing="false"
+                                    text="Games ">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#blackjack" text="Blackjack"/>
+                                <MenuItem mnemonicParsing="false" onAction="#roulette" text="Roulette"/>
+                                <MenuItem mnemonicParsing="false" onAction="#poker" text="Poker"/>
+                                <MenuItem mnemonicParsing="false" onAction="#noGame" text="No game"/>
+                            </items>
                             <VBox.margin>
                                 <Insets top="10.0"/>
                             </VBox.margin>
-                        </ChoiceBox>
-                        <Button fx:id="gameButton" mnemonicParsing="false" onAction="#searchByGame" text="Search">
+                        </MenuButton>
+                        <Button mnemonicParsing="false" onAction="#searchByGame" text="Search">
                             <font>
                                 <Font size="14.0"/>
                             </font>
@@ -77,12 +85,17 @@
                                 <Insets/>
                             </VBox.margin>
                         </Label>
-                        <ChoiceBox fx:id="activity" prefWidth="150.0">
+                        <MenuButton fx:id="activityMenuButton" mnemonicParsing="false"
+                                    text="Activity">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#activity" text="True"/>
+                                <MenuItem mnemonicParsing="false" onAction="#noActivity" text="False"/>
+                            </items>
                             <VBox.margin>
                                 <Insets top="10.0"/>
                             </VBox.margin>
-                        </ChoiceBox>
-                        <Button fx:id="activityButton" mnemonicParsing="false" onAction="#searchByActivity"
+                        </MenuButton>
+                        <Button mnemonicParsing="false" onAction="#searchByActivity"
                                 text="Search">
                             <font>
                                 <Font size="14.0"/>

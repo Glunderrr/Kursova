@@ -10,6 +10,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import static com.example.kursova.Main.write;
+
+
+import static com.example.kursova.ObjectArray.getPlayersInGames;
 
 import java.util.List;
 import java.util.Random;
@@ -156,14 +160,18 @@ public class CasinoGame {
     }
 
     public void increment(Poor poor) {
+        getPlayersInGames().add(poor);
         playerList.add(poor);
         playerCounter = playerList.size();
-        playerCounterLabel.setText("Players at the table: " + playerCounter); /*= new Label("Players in game: " + playerList.size())*/
+        playerCounterLabel.setText("Players at the table: " + playerCounter);
+        write(poor.toString());
     }
 
     public void decrement(Poor poor) {
+        getPlayersInGames().remove(poor);
         playerList.remove(poor);
         playerCounter = playerList.size();
-        playerCounterLabel.setText("Players at the table: " + playerCounter); /*= new Label("Players in game: " + playerList.size())*/
+        playerCounterLabel.setText("Players at the table: " + playerCounter);
+        write(poor.toString());
     }
 }

@@ -6,6 +6,7 @@ import com.example.kursova.microobjects.Poor;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import static com.example.kursova.Main.write;
 
 
 public class AddPoorWindow {
@@ -25,6 +26,7 @@ public class AddPoorWindow {
         else if(rb_rich.isSelected()) player = new Poor("12",12,21,21); // ДОПИШЕТЬСЯ В ПРОЦЕСІ
         else  player = new Poor("12",12,21,21); // ДОПИШЕТЬСЯ В ПРОЦЕСІ
 
+        write(player.toString());
         Main.primaryPane.getChildren().add(player.getGroup());
         ObjectArray.getObjectList().add(player);
         Main.newStage.close();
