@@ -7,8 +7,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import java.util.stream.Collectors;
-
 import static com.example.kursova.Main.casinoGames;
 import static com.example.kursova.ObjectArray.*;
 import static com.example.kursova.ObjectArray.getActiveObjectList;

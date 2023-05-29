@@ -30,8 +30,6 @@ public class Main extends Application {
     public static Pane primaryPane;
     public static Stage newStage;
     public static CasinoGame[] casinoGames;
-    /*FileWriter writer;
-    BufferedWriter bufferedWriter;*/
 
     @Override
     public void start(Stage primaryStage) {

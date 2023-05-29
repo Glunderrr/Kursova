@@ -38,7 +38,7 @@ public class ObjectArray {
 
     public static void showList(String stageTitle) {
         Label list = new Label();
-        for (Object object : objectList) list.setText(list.getText() + object.toString());
+        for (Poor player : objectList) list.setText(list.getText() + player.toString()+"\n");
         list.setPadding(new Insets(5, 0, 0, 20));
         list.setFont(new Font(15));
         Pane pane = new Pane();
